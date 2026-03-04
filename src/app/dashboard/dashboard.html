@@ -1,0 +1,61 @@
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.collapsed]="!sidebarVisible()">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="pi pi-shield text-primary text-3xl"></i>
+                @if (sidebarVisible()) {
+                <span class="font-bold text-xl ml-2">RRHH Pro</span>
+                }
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <p-menu [model]="menuItems" styleClass="w-full border-none bg-transparent"></p-menu>
+        </div>
+
+        <div class="sidebar-footer">
+            @if (sidebarVisible()) {
+            <div class="user-profile p-3 flex align-items-center gap-3 border-round hover:surface-hover cursor-pointer">
+                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle"
+                    size="large"></p-avatar>
+                <div class="flex flex-column">
+                    <span class="font-bold text-sm">Amy Elsner</span>
+                    <span class="text-xs text-600">Admin</span>
+                </div>
+            </div>
+            } @else {
+            <div class="flex justify-content-center p-3">
+                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                    shape="circle"></p-avatar>
+            </div>
+            }
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="topbar surface-card border-bottom-1 surface-border">
+            <div class="flex align-items-center gap-3">
+                <p-button icon="pi pi-bars" [text]="true" (onClick)="toggleSidebar()"></p-button>
+                <h2 class="text-xl font-semibold m-0">Dashboard Overview</h2>
+            </div>
+
+            <div class="flex align-items-center gap-3">
+                <span class="p-input-icon-left w-full hidden md:block">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Buscar..." class="w-20rem p-2 border-round-xl" />
+                </span>
+                <p-button icon="pi pi-bell" [text]="true" pBadge [value]="'3'"></p-button>
+                <p-button icon="pi pi-user" [text]="true" (onClick)="userMenu.toggle($event)"></p-button>
+                <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="content-body p-4">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+</div>

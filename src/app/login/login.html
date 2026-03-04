@@ -1,0 +1,60 @@
+<div class="login-container">
+  <div class="login-background"></div>
+  <p-card class="login-card shadow-lg glass" [style]="{ width: '400px', borderRadius: '16px' }">
+    <ng-template pTemplate="header">
+      <div class="flex justify-content-center pt-5">
+        <div class="logo-placeholder">
+          <i class="pi pi-shield text-6xl text-primary"></i>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="text-center mb-5">
+      <h2 class="text-900 font-bold mb-2">Bienvenido al Sistema de RRHH</h2>
+      <span class="text-600">Ingresar sus credenciales para acceder a su cuenta</span>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="flex flex-column gap-4">
+      <div class="flex flex-column gap-2">
+        <p-iftalabel>
+          <input pInputText id="email" formControlName="email" class="w-full p-3" autocomplete="email" />
+          <label for="email">Email Address</label>
+        </p-iftalabel>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <small class="p-error">Email is required.</small>
+        }
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <p-iftalabel>
+          <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false"
+            styleClass="w-full" inputStyleClass="w-full p-3" autocomplete="current-password"></p-password>
+          <label for="password">Password</label>
+        </p-iftalabel>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <small class="p-error">Password is required.</small>
+        }
+      </div>
+
+      <div class="flex align-items-center justify-content-between mb-2">
+        <div class="flex align-items-center">
+          <input id="remember" type="checkbox" class="mr-2">
+          <label for="remember" class="text-600 text-sm">Remember me</label>
+        </div>
+        <a class="text-primary text-sm font-medium no-underline cursor-pointer">Forgot password?</a>
+      </div>
+
+      <p-button label="Log In" type="submit" [loading]="loading()"
+        styleClass="w-full p-3 text-lg font-bold border-round-xl" icon="pi pi-sign-in"></p-button>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="text-center mt-3">
+        <span class="text-600">Don't have an account? </span>
+        <a class="text-primary font-bold no-underline cursor-pointer">Sign Up</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+
+<p-toast position="bottom-right"></p-toast>

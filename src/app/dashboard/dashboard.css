@@ -1,0 +1,124 @@
+:host {
+    display: block;
+    height: 100vh;
+}
+
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--surface-ground);
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-card);
+    border-right: 1px solid var(--surface-border);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--surface-border);
+}
+
+/* Main Content Styling */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.topbar {
+    height: 70px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    backdrop-filter: blur(8px);
+    background: rgba(var(--surface-card), 0.85);
+}
+
+.content-body {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Menu Customization */
+:host ::ng-deep .p-menu {
+    border: none;
+    border-radius: 0;
+}
+
+:host ::ng-deep .p-menuitem-link {
+    border-radius: 12px;
+    margin: 0.25rem 0.75rem;
+    transition: background 0.2s;
+}
+
+:host ::ng-deep .p-menuitem-link:hover {
+    background: var(--surface-hover);
+}
+
+:host ::ng-deep .p-menu.collapsed .p-menuitem-text {
+    display: none;
+}
+
+/* Utility Cards */
+.surface-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.surface-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        left: -280px;
+    }
+
+    .sidebar.visible {
+        left: 0;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+}

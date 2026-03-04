@@ -1,0 +1,68 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-ground);
+}
+
+.login-background {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(236, 72, 153, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 30% 70%, rgba(20, 184, 166, 0.1) 0%, transparent 40%);
+    animation: rotate 30s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.login-card {
+    z-index: 1;
+    backdrop-filter: blur(12px);
+    background: rgba(var(--surface-card), 0.85);
+    border: 1px solid rgba(var(--surface-border), 0.4);
+}
+
+.logo-placeholder {
+    width: 100px;
+    height: 100px;
+    background: var(--primary-50);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px -4px rgba(var(--primary-500), 0.2);
+}
+
+:host ::ng-deep .p-card {
+    background: transparent !important;
+}
+
+:host ::ng-deep .p-inputtext:focus {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary-200), 0 1px 2px 0 rgba(0, 0, 0, 0);
+}
+
+:host ::ng-deep .p-button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .p-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
