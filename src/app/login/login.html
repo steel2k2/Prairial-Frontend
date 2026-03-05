@@ -17,11 +17,11 @@
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="flex flex-column gap-4">
       <div class="flex flex-column gap-2">
         <p-iftalabel>
-          <input pInputText id="email" formControlName="email" class="w-full p-3" autocomplete="email" />
-          <label for="email">Email Address</label>
+          <input pInputText id="username" formControlName="username" class="w-full p-3" autocomplete="username" />
+          <label for="username">Username</label>
         </p-iftalabel>
-        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-        <small class="p-error">Email is required.</small>
+        @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+        <small class="p-error">Username is required.</small>
         }
       </div>
 

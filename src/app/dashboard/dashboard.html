@@ -48,6 +48,29 @@
                     <input pInputText type="text" placeholder="Buscar..." class="w-20rem p-2 border-round-xl" />
                 </span>
                 <p-button icon="pi pi-bell" [text]="true" pBadge [value]="'3'"></p-button>
+                <p-button [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'" [text]="true"
+                    (onClick)="themeService.toggleTheme()" pTooltip="Cambiar Modo" tooltipPosition="bottom">
+                </p-button>
+                <p-button icon="pi pi-palette" [text]="true" (onClick)="op.toggle($event)" pTooltip="Personalizar Color"
+                    tooltipPosition="bottom">
+                </p-button>
+                <p-popover #op>
+                    <div class="flex flex-column gap-3 p-2">
+                        <span class="font-bold text-sm mb-1">Color Principal</span>
+                        <div class="flex flex-wrap gap-2 justify-content-center" style="width: 140px;">
+                            @for (color of availableColors; track color.name) {
+                            <button
+                                class="w-2rem h-2rem border-circle cursor-pointer border-2 transition-transform hover:scale-110 active:scale-95"
+                                [style.backgroundColor]="color.value"
+                                [style.borderColor]="themeService.primaryColor() === color.name ? 'var(--text-color)' : 'transparent'"
+                                (click)="setPrimaryColor(color.name); op.hide()" [title]="color.name">
+                            </button>
+                            }
+                        </div>
+                    </div>
+                </p-popover>
+                <p-button icon="pi pi-sign-out" [text]="true" severity="danger" (onClick)="logout()"
+                    pTooltip="Cerrar Sesión" tooltipPosition="bottom"></p-button>
                 <p-button icon="pi pi-user" [text]="true" (onClick)="userMenu.toggle($event)"></p-button>
                 <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
             </div>

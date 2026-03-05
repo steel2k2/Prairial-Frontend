@@ -9,6 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -31,9 +32,10 @@ import { MessageService } from 'primeng/api';
 export class LoginComponent {
     private router = inject(Router);
     private messageService = inject(MessageService);
+    private authService = inject(AuthService);
 
     loginForm = new FormGroup({
-        email: new FormControl('', [Validators.required]),
+        username: new FormControl('', [Validators.required]),
         password: new FormControl('', [Validators.required])
     });
 
@@ -42,34 +44,37 @@ export class LoginComponent {
     onLogin() {
         if (this.loginForm.valid) {
             this.loading.set(true);
-            // Simulate API call
-            setTimeout(() => {
-                this.loading.set(false);
-                console.log('Login success - signaling redirection...');
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Exitoso',
-                    detail: 'Ingreso correcto'
-                });
+            const credentials = {
+                username: this.loginForm.value.username!,
+                password: this.loginForm.value.password!
+            };
 
-                // Redirect to dashboard after a short delay
-                setTimeout(() => {
-                    console.log('Navigating to /dashboard');
-                    this.router.navigate(['/dashboard']).then(success => {
-                        if (success) {
-                            console.log('Navigation successful!');
-                        } else {
-                            console.error('Navigation failed!');
-                        }
-                    }).catch(err => {
-                        console.error('Navigation error:', err);
+            this.authService.login(credentials).subscribe({
+                next: (resp) => {
+                    this.loading.set(false);
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Exitoso',
+                        detail: 'Ingreso correcto'
                     });
-                }, 800);
-            }, 1500);
+
+                    setTimeout(() => {
+                        this.router.navigate(['/dashboard']);
+                    }, 500);
+                },
+                error: (err) => {
+                    this.loading.set(false);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error de Autenticación',
+                        detail: 'Usuario o contraseña incorrectos'
+                    });
+                }
+            });
         } else {
             this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
+                severity: 'warn',
+                summary: 'Atención',
                 detail: 'Por favor complete el formulario correctamente'
             });
         }

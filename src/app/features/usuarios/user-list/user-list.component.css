@@ -1,0 +1,57 @@
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 2rem;
+}
+
+:host ::v-deep .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 1.5rem 0;
+}
+
+:host ::v-deep .p-datatable-thead>tr>th {
+    background: var(--surface-section);
+    color: var(--text-color-secondary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    padding: 1rem;
+    border-bottom: 2px solid var(--surface-border);
+}
+
+:host ::v-deep .p-datatable-tbody>tr {
+    border-bottom: 1px solid var(--surface-border);
+}
+
+:host ::v-deep .p-datatable-tbody>tr>td {
+    padding: 1rem;
+    font-size: 0.9375rem;
+}
+
+:host ::v-deep .p-paginator {
+    background: transparent;
+    border-top: 1px solid var(--surface-border);
+    padding: 1rem 0;
+}
+
+:host ::v-deep .p-inputtext {
+    border-radius: 8px;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    width: 300px;
+    transition: all 0.2s;
+}
+
+:host ::v-deep .p-inputtext:focus {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+/* Glassmorphism effect for the table in dark mode */
+.dark .card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}

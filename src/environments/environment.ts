@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:8080/api' // URL base por defecto de Quarkus
+    apiUrl: '/api' // Redirigido por el proxy en desarrollo
 };

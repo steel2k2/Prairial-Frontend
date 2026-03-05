@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -22,24 +22,28 @@ import { HrService } from '../../../core/services/hr.service';
         InputIconModule
     ],
     template: `
-    <div class="surface-card p-4 border-round-xl shadow-1">
+    <div class="card p-4">
         <div class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-4 gap-3">
-            <h2 class="text-2xl font-bold m-0">Gestión de Empleados</h2>
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800 dark:text-white">Gestión de Empleados</h1>
+                <p class="text-slate-500 dark:text-slate-400">Administración detallada del personal y su estado.</p>
+            </div>
             <div class="flex gap-2">
                 <p-iconfield iconPosition="left">
                     <p-inputicon class="pi pi-search"></p-inputicon>
-                    <input pInputText type="text" (input)="onSearch($event)" placeholder="Buscar empleado..." class="w-full md:w-20rem" />
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar empleado..." class="w-full md:w-20rem" />
                 </p-iconfield>
                 <p-button label="Nuevo" icon="pi pi-plus" severity="primary"></p-button>
             </div>
         </div>
 
-        <p-table [value]="employees" [loading]="loading" [rows]="10" [paginator]="true" 
-                 [responsiveLayout]="'scroll'" styleClass="p-datatable-sm">
+        <p-table #dt [value]="employees()" [loading]="loading()" [rows]="10" [paginator]="true" 
+                 [responsiveLayout]="'scroll'" styleClass="p-datatable-striped"
+                 [globalFilterFields]="['firstName', 'lastName', 'email', 'dni']">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
+                    <th pSortableColumn="firstName">Nombre <p-sortIcon field="firstName"></p-sortIcon></th>
+                    <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
                     <th>DNI</th>
                     <th>Cargo</th>
                     <th>Antigüedad</th>
@@ -48,8 +52,12 @@ import { HrService } from '../../../core/services/hr.service';
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-employee>
-                <tr>
-                    <td>{{employee.firstName}} {{employee.lastName}}</td>
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td>
+                        <div class="font-medium text-slate-700 dark:text-slate-200">
+                            {{employee.firstName}} {{employee.lastName}}
+                        </div>
+                    </td>
                     <td>{{employee.email}}</td>
                     <td>{{employee.dni}}</td>
                     <td>{{employee.positionId}}</td>
@@ -59,45 +67,48 @@ import { HrService } from '../../../core/services/hr.service';
                     </td>
                     <td>
                         <div class="flex gap-2">
-                            <p-button icon="pi pi-pencil" [text]="true" severity="secondary"></p-button>
-                            <p-button icon="pi pi-trash" [text]="true" severity="danger"></p-button>
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="info" size="small"></p-button>
+                            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small"></p-button>
                         </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="7" class="text-center p-4">No se encontraron empleados.</td>
+                    <td colspan="7" class="text-center py-8">
+                        <div class="flex flex-col items-center gap-3">
+                            <i class="pi pi-users text-4xl text-slate-300"></i>
+                            <span class="text-slate-500">No se encontraron empleados.</span>
+                        </div>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
   `,
-    styles: [`
-    :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-        background: var(--surface-ground);
-    }
-  `]
+    styleUrl: './employee-list.css'
 })
 export class EmployeeListComponent implements OnInit {
     private hrService = inject(HrService);
 
-    employees: Employee[] = [];
-    loading: boolean = true;
+    employees = signal<Employee[]>([]);
+    loading = signal<boolean>(true);
 
     ngOnInit() {
         this.loadEmployees();
     }
 
     loadEmployees() {
+        this.loading.set(true);
         this.hrService.getEmployees().subscribe({
             next: (data) => {
-                this.employees = data;
-                this.loading = false;
+                this.employees.set(data);
+                this.loading.set(false);
             },
-            error: () => {
-                // En caso de error (ej. backend no listo), cargamos datos de ejemplo
-                this.employees = [
+            error: (err) => {
+                console.warn('Cargando mock data por error en API:', err);
+                // Fallback mock data
+                this.employees.set([
                     {
                         id: '1',
                         firstName: 'Carlos',
@@ -120,8 +131,8 @@ export class EmployeeListComponent implements OnInit {
                         departmentId: 'RRHH',
                         status: 'active'
                     }
-                ];
-                this.loading = false;
+                ]);
+                this.loading.set(false);
             }
         });
     }
@@ -131,16 +142,12 @@ export class EmployeeListComponent implements OnInit {
         return `${years} años, ${months} meses`;
     }
 
-    getSeverity(status: string) {
+    getSeverity(status: string): "success" | "secondary" | "info" | "warn" | "danger" | undefined {
         switch (status) {
             case 'active': return 'success';
             case 'on_leave': return 'warn';
             case 'inactive': return 'danger';
             default: return 'info';
         }
-    }
-
-    onSearch(event: any) {
-        // Implementar búsqueda local o remota
     }
 }
